@@ -7,6 +7,7 @@ import org.generation.app.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class CustomerController {
 	@Autowired
 	ICustomerService customerService;
 	
+	//@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@GetMapping //localhost:8080/api/customers
 	public List<Customer> getAllCustomers(){
 		return customerService.getAllCustomers();		
@@ -42,6 +44,7 @@ public class CustomerController {
 		}
 	}
 	
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping //localhost:8080/api/customers
 	public ResponseEntity<?> setNewCustomer(@RequestBody Customer customer) {
 		try {
