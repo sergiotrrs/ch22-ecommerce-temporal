@@ -1,0 +1,1 @@
+web: java -jar -Dserver.port=$PORT build/libs/ch22-ecommerce-0.0.1-SNAPSHOT.jar
