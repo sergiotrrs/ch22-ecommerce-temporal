@@ -1,9 +1,13 @@
 package org.generation.app.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.generation.app.dto.CustomerDto;
 import org.generation.app.model.Customer;
 import org.generation.app.repository.ICustomerRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +15,20 @@ import org.springframework.stereotype.Service;
 public class CustomerService implements ICustomerService {
 	
 	@Autowired
-	ICustomerRepository customerRepository;
+	private ICustomerRepository customerRepository;
 	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
-	public List<Customer> getAllCustomers() {
+	public List<CustomerDto> getAllCustomers() {
 		List<Customer> allCustomers = (List<Customer>) customerRepository.findAll();
-		return allCustomers  ;
+		
+		List<CustomerDto> customersDto = allCustomers.stream()
+					.map((customer) -> modelMapper.map(customer, CustomerDto.class))
+					.collect(Collectors.toList());
+		
+		return customersDto  ;
 	}
 
 	@Override
@@ -27,10 +38,12 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer getCustomerById(long idCustomer) {		
-		return customerRepository.findById(idCustomer)
+	public CustomerDto getCustomerById(long idCustomer) {		
+		 Customer customer = customerRepository.findById(idCustomer)
 				.orElseThrow( ()-> 
 				new IllegalStateException("User does not exist with id: " + idCustomer));
+		 CustomerDto customerDto =  modelMapper.map(customer, CustomerDto.class);
+		 return customerDto;
 	}
 
 	@Override
